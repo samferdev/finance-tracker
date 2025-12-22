@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const UserSchema = mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, 'Por favor, adicione um nome']
@@ -19,35 +19,36 @@ const UserSchema = mongoose.Schema({
     password: {
         type: String,
         required: [true, 'Por favor, adicione uma senha'],
-        minLength: 6,
+        minlength: 6,
         select: false
     },
     createdAt: {
         type: Date,
         default: Date.now
     }
-})
+});
 
-UserSchema.pre('save', async function(next) {
-    if(!this.isModified('password')) {
-        return next();
+UserSchema.pre('save', async function () {
+
+    if (!this.isModified('password')) {
+        return;
     }
 
+    // Cria o hash
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
-    next();
 
-    UserSchema.methods.getSignedJwtToken = function() {
-        return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
-            expiresIn: process.env.JWT_EXPIRE
-        });
-    }
+});
 
+// Métodos do Schema
+UserSchema.methods.getSignedJwtToken = function () {
+    return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRE
+    });
+};
 
-    // Método para comparar senha digitada com a do banco
-    UserSchema.methods.matchPassword = async function(enteredPassword) {
-        return await bcrypt.compare(enteredPassword, this.password);
-    }
-})
+UserSchema.methods.matchPassword = async function (enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
 
 module.exports = mongoose.model('User', UserSchema);
