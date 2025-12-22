@@ -62,3 +62,18 @@ const sendTokenResponse = (user, statusCode, res) => {
         token
     });
 };
+
+// @desc    Obter dados do usuário logado
+// @route   GET /api/auth/me
+// @access  Private
+
+exports.getMe = async (req, res) => {
+
+    // O user já vem pronto do middleware (req.user)
+    const user = await User.findById(req.user.id);
+
+    res.status(200).json({
+        success: true,
+        data: user
+    });
+};
