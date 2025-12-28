@@ -5,7 +5,7 @@ const router = express.Router();
 const { register, login, getMe } = require('../controllers/authController');
 
 // Importado o Middleware de Proteção
-const { protect } = require('../middlewares/auth');
+const { protect } = require('../middleware/auth');
 
 router.post('/register', register);
 router.post('/login', login);
