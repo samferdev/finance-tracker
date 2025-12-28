@@ -1,33 +1,35 @@
 const mongoose = require('mongoose');
 
-const CategorySchema = mongoose.Schema({
-    title: {
+const TransactionSchema = new mongoose.Schema({
+    text: {
         type: String,
-        required: [true, 'Por favor, adicione um título para a transação'],
+        required: [true, 'Por favor, adicione uma descrição'],
         trim: true
     },
     amount: {
         type: Number,
         required: [true, 'Por favor, adicione um valor para a transação']
     },
-    type: {
+    /*type: {
         type: String,
         required: true,
         enum: ['income', 'expense']
-    },
-    category: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
-        required: true
-    },
-    date: {
+    },*/
+    // category: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Category',
+    //     required: true
+    // },
+    createdAt: {
         type: Date,
         default: Date.now
     },
-    notes: {
-        type: String,
-        maxlength: 500,
-    },
-}, {timestamps: true});
 
-module.exports = mongoose.model('Transaction', CategorySchema);
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
+});
+
+module.exports = mongoose.model('Transaction', TransactionSchema);
