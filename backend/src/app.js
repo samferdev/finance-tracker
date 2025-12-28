@@ -9,6 +9,7 @@ app.use(express.json());
 
 // Montar as rotas
 app.use('/api/auth', authRoutes);
+app.use('/api/transactions', require('./routes/transactionRoutes'));
 
 // Rotas
 app.get('/', (req, res) => {
